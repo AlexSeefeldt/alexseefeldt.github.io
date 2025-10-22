@@ -131,7 +131,7 @@ header nav a {
   display: inline-block;
 }
 
-code, pre {
+code, pre.code {
   background-color: #eeeeee;
 }
 
@@ -140,10 +140,6 @@ pre.code {
   margin: 1em -10px;
   overflow-x: auto;
   max-width: 100%;
-}
-
-pre.code code {
-  background-color: transparent;
 }
 
 .album-art-container {
