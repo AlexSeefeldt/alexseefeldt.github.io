@@ -100,15 +100,15 @@ a:hover {
 
 header h1 {
   margin-top: 0;
-  --smear-gradient-color: darkorange;
+  --smear-gradient-color: #4d77a5;
 }
 
 .resume h2, main > h3 {
-  --smear-gradient-color: mediumseagreen;
+  --smear-gradient-color: #4d77a5;
 }
 
 main > h2 {
-  --smear-gradient-color: gold;
+  --smear-gradient-color: #4d77a5;
 }
 
 .resume h2, header h1, main > h2, main > h3 {

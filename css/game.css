@@ -31,7 +31,7 @@
   -ms-interpolation-mode: nearest-neighbor;
 }
 #pixi-container .game-window {
-  background-color: ghostwhite;
+  background-color: #fdfdfd;
   z-index: 1;
   padding: 9px;
   font-size: 0.8em;
