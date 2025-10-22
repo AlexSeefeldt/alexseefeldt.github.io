@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <title>Alex Seefeldt</title>
+  <meta charset="utf-8" />
+  <meta content="#6495ED" name="theme-color" />
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <!-- <link href="/feed.xml" rel="alternate" title="RSS" type="application/rss+xml" /> -->
+  <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+  <link href="/css/style.css" rel="stylesheet" type="text/css" />
+  <link href="/css/game.css" rel="stylesheet" type="text/css" />
+  <script defer src="/js/album-art.js" data-api-key="5460c3381d64e7e9908b9fdfc5559747"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Alex Seefeldt</h1>
+    <nav><a href="/">Home</a><a href="/about">About</a><a href="/demos">Demos</a></nav>
+  </header>
+  <main>
+    <h3>Last.fm album art fetcher</h3>
+    <p><a href="/js/album-art.js" download="">Download album-art.js</a></p>
+    <p>You can include album art on your site without having to look up URLs or host it yourself!</p>
+    <p>This script uses the Last.fm API to pull down album art and insert it into a static site.</p>
+    <h3>Usage</h3>
+    <ul>
+      <li>In the <code>&lt;head&gt;</code> of your HTML, add a <code>&lt;script&gt;</code> tag with:<ul>
+          <li>a <code>src</code> attribute with the path to the <code>album-art.js</code> file,</li>
+          <li>a <code>defer</code> attribute present, and</li>
+          <li>a <code>data-api-key</code> attribute with your <a href="https://www.last.fm/api/account/create">Last.fm
+              API</a> key.</li>
+        </ul>
+      </li>
+      <li>In the <code>&lt;body&gt;</code>, use <code>&lt;img&gt;</code> tags wherever you want album art, with:<ul>
+          <li>a <code>data-album</code> attribute containing the name of the album you want,</li>
+          <li>a <code>data-artist</code> attribute containing the name of the artist, and</li>
+          <li>a <code>width</code> and <code>height</code> defined, preferrably square.</li>
+        </ul>
+      </li>
+    </ul>
+    <p>
+      With this info supplied, <code>album-art.js</code> will use the album and artist supplied on each <code>&lt;img&gt;</code> to search for the albums on Last.fm.
+      If it finds the album, it will insert the album art for it into the page, and you’re good to go.
+    </p>
+    <p>
+      If the script encounters an error during this process, it will put the error message into the <code>data-error</code> attribute of the affected <code>&lt;img&gt;</code> element.
+    </p>
+    <p>Usage looks something like this:</p>
+    <pre class="code"><code>&lt;head&gt;
+  ...
+  &lt;script
+    defer
+    src='example/path/to/album-art.js'
+    data-api-key='YOUR-API-KEY'&gt;
+  &lt;/script&gt;
+  ...
+&lt;/head&gt;
+&lt;body&gt;
+  ...
+  &lt;img
+    data-album='Heaven or Las Vegas'
+    data-artist='Cocteau Twins'
+    width='233'
+    height='233'
+  /&gt;
+  &lt;img
+    data-album='Crumbling'
+    data-artist='Mid-Air Thief'
+    width='233'
+    height='233'
+  /&gt;
+  &lt;img
+    data-album='Illinois'
+    data-artist='Sufjan Stevens'
+    width='233'
+    height='233'
+  /&gt;
+  ...
+&lt;/body&gt;
+</code></pre>
+    <p>Here's the result:</p>
+    <div class="album-art-container">
+      <img data-album="Heaven or Las Vegas" data-artist="Cocteau Twins" width="233" height="233" />
+      <img data-album="Crumbling" data-artist="Mid-Air Thief" width="233" height="233" />
+      <img data-album="Illinois" data-artist="Sufjan Stevens" width="233" height="233" />
+    </div>
+    <h3>Setup</h3>
+    <ol>
+      <li>First, you need to have a normal <a href="https://www.last.fm/join">Last.fm account</a>.</li>
+      <li>Once logged in, create a <a href="https://www.last.fm/api/account/create">Last.fm API account</a> to get an API key.
+        <ul>
+          <li>The API call for <code>album-art.js</code> doesn’t require any special authentication beyond the API key, so you don’t need to fill in the “Callback URL” or “Application homepage” fields.</li>
+        </ul>
+      </li>
+      <li>Download a copy of <code>album-art.js</code> and put it somewhere on your site.</li>
+      <li>Follow the <strong>Usage</strong> instructions above to include the script on any page on your site you want
+        to include album art on.</li>
+    </ol>
+    <h3>License</h3>
+    <p>If you want to credit me on your site, that would be great. You can credit me as <a href="https://alexseefeldt.github.io/">Alex</a>.</p>
+  </main>
+  <footer>
+  </footer>
+</body>
+</html>

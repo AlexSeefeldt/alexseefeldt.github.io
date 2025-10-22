@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>Alex Seefeldt</title>
+  <meta charset="utf-8" />
+  <meta content="#6495ED" name="theme-color" />
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <!-- <link href="/feed.xml" rel="alternate" title="RSS" type="application/rss+xml" /> -->
+  <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+  <link href="/css/style.css" rel="stylesheet" type="text/css" />
+  <link href="/css/game.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <header>
+    <h1>Alex Seefeldt</h1>
+    <nav><a href="/">Home</a><a href="/about">About</a><a href="/demos">Demos</a></nav>
+  </header>
+  <main>
+    <h2>Block game</h2>
+    <div tabindex="0" id="pixi-container">
+      <div class="game-window show" id="intro-window">
+        <h3>Instructions</h3>
+        <p>Make block combos of three or more of the same color in a row.</p>
+        <h4>Controls</h4>
+        <dl>
+          <dt>Move:</dt><dd>Arrow Keys</dd>
+          <dt>Swap:</dt><dd>Space</dd>
+          <dt>Pause:</dt><dd>Escape</dd>
+        </dl>
+        <h4>Touch controls</h4>
+        <ul>
+          <li>Drag blocks left or right to swap.</li>
+          <li>Tap outside the game area to pause.</li>
+          <li>Also works with a mouse.</li>
+        </ul>
+        <h4>Play until</h4>
+        <form name="play-until">
+          <label>
+            <input type="radio" name="limit-type" value="none" checked=""></input>
+            whenever
+          </label>
+          <label>
+            <input type="radio" name="limit-type" value="blocks"></input>
+            <input type="text" class="numeric-input" name="block-limit" value="500" size="3"></input>
+            blocks broken
+          </label>
+          <label>
+            <input type="radio" name="limit-type" value="time"></input>
+            <input type="text" class="time-input" name="time-limit" value="2:27" size="3"></input>
+            minutes elapsed
+          </label>
+        </form>
+        <h4>Audio credit</h4>
+        <p><a href="https://midairthief.bandcamp.com/track/mt-dust-2"><cite>Mt. Dust</cite></a> by 새눈도둑 (Bird’s Eye Thief).<br>Used with permission.</p>
+        <label class="standalone-input"><input type="checkbox" data-action="toggle-mute" /> Mute audio</label>
+        <button data-action="start" class="link-style-button">Start game</button>
+      </div>
+      <div class="game-window" id="pause-window">
+        <h3>Game paused</h3>
+        <h4>Stats</h4>
+        <dl class="stats">
+          <dt>Blocks broken:</dt><dd data-stat="blocks-broken"></dd>
+          <dt>Total time:</dt><dd><span data-stat="elapsed-minutes"></span>:<span data-stat="elapsed-seconds"></span></dd>
+          <dt>Overall rate:</dt><dd><span data-stat="break-rate"></span> blocks/minute</dd>
+          <dt>Longest chain:</dt><dd data-stat="longest-chain"></dd>
+          <dt>Biggest combo:</dt><dd data-stat="biggest-combo"></dd>
+        </dl>
+        <h4>Controls</h4>
+        <dl>
+          <dt>Move:</dt><dd>Arrow Keys</dd>
+          <dt>Swap:</dt><dd>Space</dd>
+          <dt>Pause:</dt><dd>Escape</dd>
+        </dl>
+        <h4>Touch controls</h4>
+        <ul>
+          <li>Drag blocks left or right to swap.</li>
+          <li>Tap outside the game area to pause.</li>
+          <li>Also works with a mouse.</li>
+        </ul>
+        <h4>Audio credit</h4>
+        <p><a href="https://midairthief.bandcamp.com/track/mt-dust-2"><cite>Mt. Dust</cite></a> by 새눈도둑 (Bird’s Eye Thief).<br>Used with permission.</p>
+        <label class="standalone-input"><input type="checkbox" data-action="toggle-mute" /> Mute audio</label>
+        <button data-action="resume" class="link-style-button">Resume</button>
+        <div class="reset-buttons">
+          <button class="link-style-button reset-uncertain">Reset</button>
+          <div class="button-line confirm-reset">Are you sure? <button data-action="reset" class="link-style-button reset-certain">Yes, reset!</button></div>
+        </div>
+      </div>
+      <div class="game-window" id="end-window">
+        <h3>Game finished!</h3>
+        <h4>Stats</h4>
+        <dl class="stats">
+          <dt>Blocks broken:</dt><dd data-stat="blocks-broken"></dd>
+          <dt>Total time:</dt><dd><span data-stat="elapsed-minutes"></span>:<span data-stat="elapsed-seconds"></span></dd>
+          <dt>Overall rate:</dt><dd><span data-stat="break-rate"></span> blocks/minute</dd>
+          <dt>Longest chain:</dt><dd data-stat="longest-chain"></dd>
+          <dt>Biggest combo:</dt><dd data-stat="biggest-combo"></dd>
+        </dl>
+        <button data-action="reset" class="link-style-button">Reset</button>
+      </div>
+      <div class="game-window" id="end-zero-window">
+        <h3>Game finished...?</h3>
+        <dl class="stats">
+          <dt>Blocks broken:</dt><dd>0</dd>
+          <dt>Total time:</dt><dd><span>0</span>:<span>00</span></dd>
+          <dt>Overall rate:</dt><dd><span>0</span> blocks/minute</dd>
+          <dt>Longest chain:</dt><dd>0</dd>
+          <dt>Biggest combo:</dt><dd>0</dd>
+        </dl>
+        <pre>A STRANGE GAME.
+THE ONLY WINNING MOVE IS
+NOT TO PLAY.
+
+HOW ABOUT A NICE GAME OF CHESS?</pre>
+        <button data-action="reset" class="link-style-button">Reset</button>
+      </div>
+    </div>
+    <script type="module" src="./bundle.min.js"></script>
+    <audio src="새눈도둑 Bird's Eye Thief - Flash - 04 Mt. Dust.mp3" id="music" loop="true"></audio>
+  </main>
+  <footer>
+  </footer>
+</body>
+</html>

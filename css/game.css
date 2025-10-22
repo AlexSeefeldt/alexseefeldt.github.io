@@ -1,0 +1,127 @@
+#pixi-container {
+  width: 303px;
+  height: 591px;
+  margin: 0 auto;
+  border: 2px solid black;
+  display: grid;
+  position: relative;
+  accent-color: #2F5898;
+}
+#pixi-container > * {
+  grid-row: 1;
+  grid-column: 1;
+}
+#pixi-container:focus, #pixi-container:focus-visible {
+  outline: none;
+}
+#pixi-container canvas {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+#pixi-container .game-window {
+  background-color: ghostwhite;
+  z-index: 1;
+  padding: 9px;
+  font-size: 0.8em;
+}
+#pixi-container .game-window:not(.show) {
+  opacity: 0;
+  pointer-events: none;
+}
+#pixi-container .game-window h3, h4 {
+  font-family: var(--serif);
+}
+#pixi-container #intro-window {
+  z-index: 2;
+}
+#pixi-container #pause-window.show {
+  background-color: #f8f8ffdd;
+}
+#pixi-container #pause-window .reset-buttons.show-confirm .reset-uncertain,
+#pixi-container #pause-window .reset-buttons:not(.show-confirm) .confirm-reset {
+  display: none;
+}
+#pixi-container #pause-window .reset-buttons .confirm-reset {
+  background: linear-gradient(to right, #6495ed66, #6495ed66 var(--completion), transparent var(--completion), transparent);
+}
+#pixi-container #end-window.show, #end-zero-window.show {
+  transition: opacity 300ms;
+}
+#pixi-container .link-style-button {
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+  font-size: inherit;
+  text-decoration: underline;
+  padding: 0;
+  cursor: pointer;
+  margin: 0 auto 4px auto;
+  display: block;
+}
+#pixi-container .button-line {
+  display: block;
+  margin: 0 auto 4px auto;
+  width: fit-content;
+}
+#pixi-container .button-line .link-style-button {
+  display: inline;
+  margin: 0;
+}
+#pixi-container dl {
+  display: grid;
+  grid-template-columns: max-content auto;
+  grid-gap: 0 10px;
+  min-width: 0;
+  margin: 0 auto 1em auto;
+}
+#pixi-container dl dt {
+  font-weight: bold;
+}
+#pixi-container dl dt, dd {
+  margin: 0;
+}
+#pixi-container ul {
+  padding-left: 24px;
+  margin-top: 0;
+}
+#pixi-container li {
+  margin: 2px;
+}
+#pixi-container form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+#pixi-container input[type=text] {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+  font-family: var(--serif);
+  font-size: 1em;
+  line-height: inherit;
+  padding: 0 0.25em 0 0.25em;
+  margin:  0 0.25em 0 0;
+}
+#pixi-container .standalone-input {
+  display: block;
+  margin-bottom: 0.5em;
+}
+#pixi-container pre {
+  margin-bottom: 1em;
+}
+#pixi-container h4 {
+  margin-bottom: 0.5em;
+}
