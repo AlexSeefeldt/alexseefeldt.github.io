@@ -47,7 +47,7 @@
   z-index: 2;
 }
 #pixi-container #pause-window.show {
-  background-color: #f8f8ffdd;
+  background-color: #fdfdfddd;
 }
 #pixi-container #pause-window .reset-buttons.show-confirm .reset-uncertain,
 #pixi-container #pause-window .reset-buttons:not(.show-confirm) .confirm-reset {
