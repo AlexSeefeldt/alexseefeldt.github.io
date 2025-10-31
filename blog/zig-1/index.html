@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Alex Seefeldt</title>
+    <meta charset="utf-8" />
+    <meta content="#6495ED" name="theme-color" />
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <!-- <link href="/feed.xml" rel="alternate" title="RSS" type="application/rss+xml" /> -->
+    <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <header>
+      <h1>Alex Seefeldt</h1>
+      <nav><a href="/">Home</a><a href="/about">About</a><a href="/demos">Demos</a><a href="/blog">Blog</a></nav>
+    </header>
+    <main>
+      <article>
+        <h1>Zig Adventure 1: Porting an audio plugin</h1>
+        <div class="byline">Alex Seefeldt</div>
+        <hr>
+        <p>
+          <a href="https://ziglang.org/">Zig</a> is a fun programming language.
+          When I try to build something with it, I always end up diving into a rabbit hole and learning new things I never expected.
+        </p><p>
+          This time, I wanted to learn how to build my own audio plugins for use in a digital audio workstation (DAW) like <a href="https://www.reaper.fm/">Reaper</a>.
+          I do some amateur music production, and I was inspired by <a href="https://www.airwindows.com/">airwindows</a>, a developer of high-quality, open-source audio plugins.
+          Chris, the author of airwindows plugins, writes blog posts about his creative and technical process,
+          which are a great resource for someone like myself trying to learn more about audio production and programming.
+        </p>
+        <h2>Choosing a plugin format</h2>
+        <p>
+          Audio plugins come in a variety of formats: a few examples include VST, AU, and AAX.
+          These plugin formats differ in how ergonomic they are to develop for (VST has some legacy to it and works easiest in C++),
+          and which DAWs support them (AAX is exclusively for Pro Tools, which in turn only supports AAX and other proprietary Pro Tools extension formats).
+        </p>
+        <img src="clap.svg" width="200" />
+        <p>
+          A few months ago, I read about <a href="https://cleveraudio.org/">CLAP</a>, an open-licensed standard developed more recently, so when considering what format to use, it was rolling around the back of my mind.
+          CLAP isn’t supported by as many DAWs as VST, but I was hoping it would offer a smoother development experience.
+          For one, it’s newer than VST, and more importantly, it exposes a C API rather than using C++-specific features, so interoperation with Zig would be easier.
+        </p><p>
+          As is often the case when I’m exploring using a C API in Zig, someone had already made a <a href="https://sr.ht/~interpunct/clap-zig-bindings/">binding library</a> for using CLAP in Zig.
+          The library was a couple Zig minor versions behind (not uncommon among Zig projects, since the language is in an unstable, fast-moving state right now),
+          but I was easily able to tweak the code to match the current version, 0.15.2.
+          I am quite pleased with the quality of these bindings,
+          and the <a href="https://git.sr.ht/~interpunct/clap-bindings-example">example project</a> was also very useful
+          as a template for my own project started, so thanks to the author, Eva.
+        </p>
+        <h2>What kind of effect to make?</h2>
+        <p>
+          For my first plugin, I wanted to do something simple.
+          I decided to do a clone of an existing airwindows plugin called <a href="https://www.airwindows.com/spiral2/">Spiral2</a>.
+          It’s a good choice for a first plugin, because the data flow is very simple: as a saturator, it processes audio samples one at a time,
+          without a need to retain any information about previous samples.
+          To make it even simpler, I decided to remove the Highpass and Presence controls and just focus on the core effect, with faders for the Input, Output, and overall Dry/Wet.
+        </p>
+        <figure><img src="spiral2-mobile.webp" class="mobile-alternative" /><img src="spiral2.webp" /><figcaption>The Spiral2 plugin as seen in my DAW. Airwindows plugins don’t come with their own UI, so they always show up as the default UI for your DAW.</figcaption></figure>
+        <h2>How CLAP works</h2>
+        <p>
+          There doesn’t seem to be a wiki or documentation site for CLAP (at least that I was able to find), but fortunately, there’s some documentation in the comments of the <a href="https://github.com/free-audio/clap/tree/main/include/clap">header files</a> for the API. Between that and going through the code of the plugin template I was using, I was able to figure out what I needed to know about how CLAP works.
+        </p><p>
+          When developing a CLAP plugin, the plugin developer must implement a number of functions that allow the host (the application running the plugin; in my case, REAPER) to control the plugin. Examples include initialization/destruction, activation/deactivation, or the start/stop of actual audio processing.
+          The core logic for the plugin happens in a function called <code>process</code>, where your plugin can receive events and raw audio data and produce output.
+        </p><p>
+          The plugin can advertise to the host what kind of data it takes and produces (note events or audio data) through extensions.
+          Extensions are optional sets of functions a plugin can implement depending on what it needs from or give to the host.
+          By implementing the <code>audio_ports</code> extension, I inform the host that my plugin takes one stereo input and produces one stereo output.
+        </p><p>
+          Extensions can do other things as well.
+          My plugin implements two other extensions:
+        </p>
+        <ul>
+          <li>a <code>params</code> plugin, which allows the user or their DAW to control parameters of the plugin while it runs.</li>
+          <li>a <code>state</code> plugin, which lets the state of those parameters be saved to disk and loaded again later.</li>
+        </ul><p>
+          There are extensions to implement a graphical interface, or to log output through the host, or do a variety of other things.
+          It’s up to the host which of these extensions it will support; for example, a given host might not actually have a graphical interface,
+          in which case it just wouldn’t use that extension when a plugin offers it.
+        </p>
+        <h2>Implementing my own Spiral2</h2>
+        <p>
+          So, taking the C++ source code for <a href="https://github.com/airwindows/airwindows/blob/master/plugins/WinVST/Spiral2/Spiral2Proc.cpp">airwindows’ Spiral2</a>, I ported the code over to Zig.
+          The original plugin has some audio dithering logic that I had a bit of a hard time faithfully reproducing, since it seemed to be implicitly converting doubles to floats and doing some other confusing casts that needed to be made explicit in Zig.
+          On the other hand, I’m not too worried about messing up the dithering, since this is just a learning project and it won’t affect the result too much.
+        </p><p>
+          Hosts can internally deal with audio samples in 32-bit or 64-bit floating point numbers (floats or doubles, respectively).
+          In the original Spiral2 source, these two cases are handled with separate functions which mostly do the same thing, but with different types.
+          I was able to handle both of these with a single function using Zig’s <a href="https://ziglang.org/documentation/master/#Function-Parameter-Type-Inference"><code>anytype</code></a>,
+          which lets you write a function for multiple argument types at a time.
+          During compilation, the compiler will go through all the calls to the function, figure out what types will be passed to it, and generate variants for each of these cases.
+        </p>
+        <h2>The biggest challenge</h2>
+        <p>
+          Overall, this project went pretty smoothly.
+          The biggest bump in the road was when I was trying to output my modified audio samples.
+          Initially, they came out sounding differently than expected, and when I turned the input or output to zero in REAPER,
+          I would just get the original audio, instead of silence as I expected.
+          I spent quite a while looking through documentation and thinking about the problem without any strong leads on what could be wrong.
+        </p><p>
+          Eventually, I found out that the output was being taken differently than I expected.
+          I got my “ah-ha” moment when I discovered that simply inverting the input samples and outputting that yielded the silence I was after.
+          It seems that the output samples actually need to be the <em>difference</em> between the input sample and what you want the final output to be, rather than the direct output value itself.
+          This wasn’t documented anywhere as far as I could tell, and I’m still not sure if it’s just how these things are normally supposed to work, or if I’m just missing something.
+        </p><p>
+          One fortunate outcome of this difficulty is that I wound up setting up better debugging to try and figure it out.
+          In a lot of projects, I rely on console output to do my debugging, but in this case, I couldn’t.
+          I ended up finding a <a href="https://forum.juce.com/t/cmake-vs-code-debugging-in-reaper/61846/5">configuration</a> I could use with VSCode to debug the plugin from within REAPER, and that worked out just fine for me, so thanks to the user who shared that.
+          Having this setup will serve me well in future audio development projects.
+        </p>
+        <h2>The finished product</h2>
+        <figure><img src="my-spiral2-mobile.webp" class="mobile-alternative" /><img src="my-spiral2.webp" /><figcaption>My own Spiral2 clone!</figcaption></figure>
+        <p>
+          To test that I was finally getting the correct results,
+          I ran my plugin and the original Spiral2 on the same audio in two different tracks, then inverted the signal of one of them.
+          I was glad to discover they cancelled each other out entirely, which means they produced the same effect.
+        </p>
+        <figure><img src="spiral2-comparison.webp" /><figcaption>You can see here the two tracks with the two plugins on them. The blue flipped null symbol indicates the second one has been inverted. Both tracks are outputting, but the master on the left shows they are cancelling each other out.</figcaption></figure>
+        <p>
+          I had fun with this project, and I learned a lot. Now I’m thinking about what my first original plugin could be.
+          There’s still so much I don’t know about audio programming, but I’m excited to learn more.
+        </p>
+      </article>
+    </main>
+    <footer>
+    </footer>
+  </body>
+</html>
